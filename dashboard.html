@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skcrew — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/dashboard.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">Skcrew</a>
+      <div class="nav-right">
+        <button id="navNewSession" class="btn-ghost">+ New Session</button>
+        <div class="profile">
+          <div class="avatar avatar-you" aria-hidden="true">Y</div>
+          <span class="username">you_sk8</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="dashboard-grid">
+      <section class="col col-form" aria-label="Post a new session">
+        <header class="section-header">
+          <h1 class="section-title">Drop a Session</h1>
+          <p class="section-sub">Post the where, when, and who with. The crew finds you.</p>
+        </header>
+
+        <form id="postForm" class="session-form" novalidate>
+          <div class="field">
+            <label for="spotName">Spot Name</label>
+            <input type="text" id="spotName" name="spotName" placeholder="Westside Ledge Spot" autocomplete="off" required />
+          </div>
+
+          <div class="field">
+            <label for="address">Address / Area</label>
+            <input type="text" id="address" name="address" placeholder="123 Main St, Downtown" autocomplete="off" required />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="date">Date</label>
+              <input type="date" id="date" name="date" required />
+            </div>
+            <div class="field">
+              <label for="time">Time</label>
+              <input type="time" id="time" name="time" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Skill Level</label>
+            <div class="chips" role="radiogroup" aria-label="Skill level">
+              <label class="chip">
+                <input type="radio" name="skill" value="Beginner" />
+                <span>Beginner</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="skill" value="Intermediate" checked />
+                <span>Intermediate</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="skill" value="Advanced" />
+                <span>Advanced</span>
+              </label>
+              <label class="chip">
+                <input type="radio" name="skill" value="All Levels" />
+                <span>All Levels</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="notes">Session Notes <span class="muted">(optional)</span></label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Bring wax, it's a ledge day. Parking around back."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Post Session
+            <span class="arrow">→</span>
+          </button>
+        </form>
+      </section>
+
+      <section class="col col-feed" aria-label="Upcoming sessions">
+        <header class="section-header">
+          <div>
+            <h2 class="section-title">Sessions Nearby</h2>
+            <p class="section-sub">Sessions posted by other skaters in your area</p>
+          </div>
+          <div class="feed-count"><span id="sessionCount">4</span> sessions</div>
+        </header>
+
+        <div id="sessionFeed" class="session-feed">
+
+          <article class="session-card" data-session>
+            <div class="card-head">
+              <div class="poster">
+                <div class="avatar" style="--accent:#FF6B35">M</div>
+                <div class="poster-meta">
+                  <span class="poster-name">skate_mia</span>
+                  <span class="post-time">2 hours ago</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="detail">
+                <span class="dicon">📍</span>
+                <div>
+                  <div class="detail-main">Westside Ledge Spot</div>
+                  <div class="detail-sub">420 Oak Ave, Westside</div>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-inline">
+                  <span class="dicon">📅</span>
+                  <span>Saturday</span>
+                </div>
+                <div class="detail-inline">
+                  <span class="dicon">⏰</span>
+                  <span>3:00 PM</span>
+                </div>
+              </div>
+              <div class="detail-inline">
+                <span class="dicon">🎯</span>
+                <span class="badge badge-intermediate">Intermediate</span>
+              </div>
+              <p class="notes">Bring wax! Ledges are primo today 🔥</p>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-join">I'm In</button>
+              <button class="link-btn">View on Map</button>
+            </div>
+          </article>
+
+          <article class="session-card" data-session>
+            <div class="card-head">
+              <div class="poster">
+                <div class="avatar" style="--accent:#5B8DEF">R</div>
+                <div class="poster-meta">
+                  <span class="poster-name">riley_shreds</span>
+                  <span class="post-time">5 hours ago</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="detail">
+                <span class="dicon">📍</span>
+                <div>
+                  <div class="detail-main">Downtown 12 Stair</div>
+                  <div class="detail-sub">12th & Main, Downtown</div>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-inline">
+                  <span class="dicon">📅</span>
+                  <span>Sunday</span>
+                </div>
+                <div class="detail-inline">
+                  <span class="dicon">⏰</span>
+                  <span>12:00 PM</span>
+                </div>
+              </div>
+              <div class="detail-inline">
+                <span class="dicon">🎯</span>
+                <span class="badge badge-advanced">Advanced</span>
+              </div>
+              <p class="notes">Session before the rain. Big tricks only.</p>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-join">I'm In</button>
+              <button class="link-btn">View on Map</button>
+            </div>
+          </article>
+
+          <article class="session-card" data-session>
+            <div class="card-head">
+              <div class="poster">
+                <div class="avatar" style="--accent:#22A06B">J</div>
+                <div class="poster-meta">
+                  <span class="poster-name">jordan_cruise</span>
+                  <span class="post-time">1 day ago</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="detail">
+                <span class="dicon">📍</span>
+                <div>
+                  <div class="detail-main">Community Skate Park</div>
+                  <div class="detail-sub">Riverside Park, East End</div>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-inline">
+                  <span class="dicon">📅</span>
+                  <span>Friday</span>
+                </div>
+                <div class="detail-inline">
+                  <span class="dicon">⏰</span>
+                  <span>5:00 PM</span>
+                </div>
+              </div>
+              <div class="detail-inline">
+                <span class="dicon">🎯</span>
+                <span class="badge badge-all">All Levels</span>
+              </div>
+              <p class="notes">Beginner friendly clinic + free skate. Come through!</p>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-join">I'm In</button>
+              <button class="link-btn">View on Map</button>
+            </div>
+          </article>
+
+          <article class="session-card" data-session>
+            <div class="card-head">
+              <div class="poster">
+                <div class="avatar" style="--accent:#A855F7">S</div>
+                <div class="poster-meta">
+                  <span class="poster-name">sam_gaps</span>
+                  <span class="post-time">3 hours ago</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="detail">
+                <span class="dicon">📍</span>
+                <div>
+                  <div class="detail-main">River Gap Spot</div>
+                  <div class="detail-sub">Riverwalk Underpass</div>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-inline">
+                  <span class="dicon">📅</span>
+                  <span>Saturday</span>
+                </div>
+                <div class="detail-inline">
+                  <span class="dicon">⏰</span>
+                  <span>6:00 PM</span>
+                </div>
+              </div>
+              <div class="detail-inline">
+                <span class="dicon">🎯</span>
+                <span class="badge badge-advanced">Advanced</span>
+              </div>
+              <p class="notes">Gap is dry finally. Sunset session.</p>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn-join">I'm In</button>
+              <button class="link-btn">View on Map</button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>
