@@ -81,7 +81,8 @@
     article.setAttribute('data-session', '');
 
     const initial = (data.username && data.username.charAt(0).toUpperCase()) || 'U';
-    const avatarColor = getAvatarColor();
+    const avatarColor = data.avatarColor || getAvatarColor();
+    const postTime = data.postTime || 'Just now';
 
     const skillBadgeClass = getBadgeClass(data.skill);
     const dateLabel = formatDate(data.date);
@@ -96,7 +97,7 @@
           <div class="avatar" style="--accent:${avatarColor}">${initial}</div>
           <div class="poster-meta">
             <span class="poster-name">${escapeHtml(data.username)}</span>
-            <span class="post-time">Just now</span>
+            <span class="post-time">${escapeHtml(postTime)}</span>
           </div>
         </div>
       </div>
@@ -167,7 +168,7 @@
   }
 
   if (form) {
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const fd = new FormData(form);
@@ -186,21 +187,76 @@
         return;
       }
 
-      const card = createSessionCard(data);
-      if (feed.firstChild) {
-        feed.insertBefore(card, feed.firstChild);
-      } else {
-        feed.appendChild(card);
+      try {
+        const res = await fetch('/api/sessions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+          let message = 'Failed to post session';
+          try {
+            const errBody = await res.json();
+            if (errBody && errBody.detail) {
+              if (typeof errBody.detail === 'string') {
+                message = errBody.detail;
+              } else if (Array.isArray(errBody.detail)) {
+                message = errBody.detail.map(function (d) { return d.msg || d.message; }).join(', ');
+              }
+            }
+          } catch (_) { }
+          throw new Error(message);
+        }
+
+        const payload = await res.json();
+        const created = payload.session || data;
+
+        const card = createSessionCard(created);
+        if (feed.firstChild) {
+          feed.insertBefore(card, feed.firstChild);
+        } else {
+          feed.appendChild(card);
+        }
+
+        updateCount();
+        showToast('Session posted! \u{1F6F9}');
+        form.reset();
+
+        const defaultSkill = form.querySelector('input[name="skill"][value="Intermediate"]');
+        if (defaultSkill) defaultSkill.checked = true;
+      } catch (err) {
+        console.error('Failed to create session:', err);
+        showToast(err && err.message ? err.message : 'Failed to post session');
       }
-
-      updateCount();
-      showToast('Session posted! \u{1F6F9}');
-      form.reset();
-
-      const defaultSkill = form.querySelector('input[name="skill"][value="Intermediate"]');
-      if (defaultSkill) defaultSkill.checked = true;
     });
   }
 
-  updateCount();
+  async function loadDashboardSessions() {
+    if (!feed) return;
+    feed.innerHTML = '';
+    try {
+      const res = await fetch('/api/dashboard', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const payload = await res.json();
+      const sessions = payload.sessions || [];
+      sessions.forEach(function (session) {
+        const card = createSessionCard(session);
+        feed.appendChild(card);
+      });
+    } catch (err) {
+      console.error('Failed to load dashboard sessions:', err);
+    } finally {
+      updateCount();
+    }
+  }
+
+  loadDashboardSessions();
 })();
