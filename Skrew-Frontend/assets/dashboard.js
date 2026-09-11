@@ -1,11 +1,52 @@
 (function () {
   'use strict';
 
+  const TOKEN_KEY = 'skrew_token';
+  const USER_KEY = 'skrew_username';
+
   const form = document.getElementById('postForm');
   const feed = document.getElementById('sessionFeed');
   const countEl = document.getElementById('sessionCount');
   const toast = document.getElementById('toast');
   const navNewBtn = document.getElementById('navNewSession');
+  const navUsername = document.getElementById('navUsername');
+  const navAvatar = document.getElementById('navAvatar');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  function clearAuth() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+
+  function redirectToLogin() {
+    clearAuth();
+    window.location.href = '/login.html';
+  }
+
+  if (!getToken()) {
+    redirectToLogin();
+    return;
+  }
+
+  function setLoggedInUser(username) {
+    if (!username) return;
+    localStorage.setItem(USER_KEY, username);
+    if (navUsername) navUsername.textContent = username;
+    if (navAvatar) navAvatar.textContent = username.charAt(0).toUpperCase();
+  }
+
+  setLoggedInUser(localStorage.getItem(USER_KEY) || '');
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function () {
+      clearAuth();
+      window.location.href = '/login.html';
+    });
+  }
 
   let toastTimer = null;
 
@@ -173,7 +214,6 @@
 
       const fd = new FormData(form);
       const data = {
-        username: 'you_sk8',
         spotName: (fd.get('spotName') || '').toString().trim(),
         address: (fd.get('address') || '').toString().trim(),
         date: (fd.get('date') || '').toString().trim(),
@@ -188,14 +228,25 @@
       }
 
       try {
+        const token = getToken();
+        if (!token) {
+          redirectToLogin();
+          return;
+        }
+
         const res = await fetch('/api/sessions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
           },
           body: JSON.stringify(data)
         });
+        if (res.status === 401) {
+          redirectToLogin();
+          return;
+        }
         if (!res.ok) {
           let message = 'Failed to post session';
           try {
@@ -258,5 +309,34 @@
     }
   }
 
+  async function loadCurrentUser() {
+    const token = getToken();
+    if (!token) {
+      redirectToLogin();
+      return;
+    }
+    try {
+      const res = await fetch('/api/me', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      if (!res.ok) {
+        redirectToLogin();
+        return;
+      }
+      const payload = await res.json();
+      if (payload.user && payload.user.username) {
+        setLoggedInUser(payload.user.username);
+      }
+    } catch (err) {
+      console.error('Failed to load current user:', err);
+      redirectToLogin();
+    }
+  }
+
+  loadCurrentUser();
   loadDashboardSessions();
 })();

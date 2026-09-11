@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skcrew — Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/home.css" />
+  <link rel="stylesheet" href="assets/auth.css" />
+</head>
+<body>
+  <nav id="navbar" aria-label="Main navigation">
+    <a href="/" class="nav-logo" aria-label="Skcrew home">Skcrew</a>
+    <ul class="nav-links">
+      <li><a href="/login.html">Log in</a></li>
+    </ul>
+  </nav>
+
+  <main class="auth-main">
+    <section class="auth-card" aria-label="Create an account">
+      <p class="auth-label">Join the crew</p>
+      <h1 class="auth-title">Register</h1>
+      <p class="auth-sub">Pick a username and password to start posting sessions.</p>
+
+      <form id="registerForm" class="auth-form" novalidate>
+        <div class="auth-field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" autocomplete="username" required />
+        </div>
+        <div class="auth-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" required />
+        </div>
+        <div class="auth-field">
+          <label for="confirmPassword">Confirm password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required />
+        </div>
+        <p id="authError" class="auth-error" role="alert" hidden></p>
+        <button type="submit" class="btn-primary auth-submit">Register</button>
+      </form>
+
+      <p class="auth-switch">Already have an account? <a href="/login.html">Log in</a></p>
+    </section>
+  </main>
+
+  <script src="assets/auth.js" defer></script>
+</body>
+</html>

@@ -601,7 +601,7 @@ html, body {
   .nav-inner { padding: 14px 16px; }
   .btn-ghost { padding: 8px 12px; font-size: 13px; }
   .profile { padding: 3px 10px 3px 3px; }
-  .username { display: none; }
+  .username { max-width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .main { padding: 24px 16px 60px; }
   .section-header {
     flex-direction: column;
